@@ -60,8 +60,10 @@ app.use((req, res) => {
         }
     });
 
-    if (req.method === 'GET') {
+        console.log("req.body", req.body);
+    if (req.method === 'GET' && req.body) {
         let bodyString = JSON.stringify(req.body);
+        console.log("bodyString", bodyString);
 
         for (const wotUrl of wotUrls) {
             bodyString = bodyString.replaceAll(wotUrl, TARGET);
