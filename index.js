@@ -22,11 +22,13 @@ app.use((req, res) => {
 
     const proxyReq = http.request(url, options, proxyRes => {
         res.writeHead(proxyRes.statusCode, proxyRes.headers);
-        proxyRes.pipe(res);
+        proxyRes.pipe(res, { end: true });
     });
 
     proxyReq.on('error', err => {
-        res.status(500).send('Proxy error: ' + err.message);
+        if (!res.headersSent) {
+            res.status(500).send('Proxy error: ' + err.message);
+        }
     });
 
     if (req.method === 'POST' && req.is('application/json')) {
@@ -50,7 +52,7 @@ app.use((req, res) => {
         proxyReq.write(newBody);
         proxyReq.end();
     } else {
-        req.pipe(proxyReq);
+        req.pipe(proxyReq, { end: true });
     }
 });
 
