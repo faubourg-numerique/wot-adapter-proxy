@@ -119,3 +119,9 @@ Ce projet est sous licence ISC. Voir le fichier de licence pour plus de détails
 ## Support
 
 Pour toute question ou problème, veuillez ouvrir une issue sur [GitHub](https://github.com/faubourg-numerique/wot-adapter-proxy/issues).
+
+## Dépannage
+
+### Erreur "Missing parameter name" au démarrage
+
+Si vous rencontrez une erreur de type `TypeError: Missing parameter name at 1`, cela peut être dû à un problème de compatibilité avec Express 5. Assurez-vous que le code utilise `app.use('/', ...)` au lieu de `app.use('*', ...)` pour capturer toutes les routes.
