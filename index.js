@@ -9,6 +9,8 @@ const app = express();
 const TARGET = process.env.TARGET_URL;
 const PORT = parseInt(process.env.PROXY_PORT);
 
+const wotUrls = process.env.WOT_URLS ? process.env.WOT_URLS.split(',') : [];
+
 app.use(bodyParser.json());
 
 // Middleware pour capturer toutes les routes et méthodes
@@ -58,7 +60,21 @@ app.use((req, res) => {
         }
     });
 
-    if (req.method === 'POST' && req.is('application/json')) {
+    if (req.method === 'GET') {
+        let bodyString = JSON.stringify(req.body);
+
+        for (const wotUrl of wotUrls) {
+            bodyString = bodyString.replaceAll(wotUrl, TARGET);
+        }
+
+        console.log(`🔄 Transformation du body GET...`);
+        console.log(`   Body après transformation:`, bodyString);
+        
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyString));
+        proxyReq.write(bodyString);
+        proxyReq.end();
+    } else if (req.method === 'POST' && req.is('application/json')) {
         const body = req.body;
         console.log(`🔄 Transformation du body JSON...`);
         console.log(`   Body avant transformation:`, JSON.stringify(body, null, 2));
