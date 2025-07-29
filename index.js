@@ -11,8 +11,8 @@ const PORT = parseInt(process.env.PROXY_PORT);
 
 app.use(bodyParser.json());
 
-// Middleware pour capturer toutes les routes
-app.all('*', (req, res) => {
+// Middleware pour capturer toutes les routes et méthodes
+app.use((req, res) => {
     const url = new URL(req.originalUrl, TARGET);
 
     const options = {

@@ -124,4 +124,12 @@ Pour toute question ou problème, veuillez ouvrir une issue sur [GitHub](https:/
 
 ### Erreur "Missing parameter name" au démarrage
 
-Si vous rencontrez une erreur de type `TypeError: Missing parameter name at 1`, cela peut être dû à un problème de compatibilité avec Express 5. Assurez-vous que le code utilise `app.use('/', ...)` au lieu de `app.use('*', ...)` pour capturer toutes les routes.
+Si vous rencontrez une erreur de type `TypeError: Missing parameter name at 1`, cela est dû à un problème de compatibilité avec Express 5 et l'utilisation de wildcards dans les routes. La solution est d'utiliser un middleware sans spécifier de route :
+
+```javascript
+app.use((req, res) => {
+    // Code du proxy...
+});
+```
+
+Au lieu de `app.all('*', ...)` ou `app.use('*', ...)` qui causent des erreurs de parsing avec Express 5.
